@@ -9,6 +9,24 @@ app = Flask(__name__)
 connect('Articles', host='127.0.0.1', port=27017)
 
 
+# Handle Error
+@app.errorhandler(404)
+def page_not_found(error):
+    message = {
+        'status': 404,
+        'message': 'Page Not Found'
+    }
+    return json.dumps(message)
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    message = {
+        'status': 500,
+        'message': 'Internal Server Error'
+    }
+    return json.dumps(message)
+
+# Router
 @app.route('/topics/newest/')
 def newest():
     return classes.Article.objects.order_by('-id').limit(10).to_json()
